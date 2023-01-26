@@ -23,6 +23,7 @@ router.get('/:id',(req,res)=>{
 	if(!product){
 		res.status(500).json({success:false})
 	}
+	
 	res.send(product)
 })
 
