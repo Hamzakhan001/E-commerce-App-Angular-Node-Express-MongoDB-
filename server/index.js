@@ -2,14 +2,18 @@ const express=require('express')
 const app=express();
 const morgan=require('morgan')
 require('dotenv/config')
+const authJwt=require('./helpers/jwt')
+const errorHandler=require('./helpers/error-handlers')
+
   
 
 //Middleware
 app.use(express.json());
 app.use(morgan('tiny'));
+app.use(authJwt())
+app.use(errorHandler)
 const mongoose=require('mongoose')
 const cors=require('cors')
-
 const api=process.env.API_URL
 
 app.use(cors());
@@ -36,7 +40,7 @@ mongoose.connect(process.env.DB_CONNECTION_STRING)
 })
 
 
-app.listen('6000',()=>{
+app.listen('1000',()=>{
 	console.log('server started on port 3000')
 
 })

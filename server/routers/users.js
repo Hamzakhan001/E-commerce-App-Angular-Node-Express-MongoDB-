@@ -4,6 +4,7 @@ const {User}=require('../models/Product')
 const { Category } = require('../models/Category')
 const mongoose=require('mongoose')
 const bcrypt=require('bcrypt')
+const jwt=require('jsonwebtoken')
 
 
 
@@ -97,21 +98,31 @@ router.delete('/:id',async(req,res)=>{
 	res.status(200).send("Product  has been deleted!")
 })
 
-router.get('/get/count',async (req,res)=>{
-    const productCount=await Product.countDocuments((count)=>count)
-	if(!productCount){
-		res.status(500).json({success:false})
+router.post('/login',async(req,res)=>{
+	const user=await User.findOne({email:req.body.email})
+	const secret=process.env.SECRET
+	if(!user){
+		return res.status(500).send("User is not found")
 	}
-	res.send({count:productCount})
+
+	if(user && bcrypt.compareSync(req.body.password,user.passwordHash)){
+		const jwt=jwt.sign({
+			userId:user.id,
+			isAdmin:user.isAdmin
+		},
+		secret,
+		{expiresIn:'1d'}
+		)
+		res.status(200).send({user:user.email,token:jwt})
+	}
+	else{
+		res.status(500).send('Credentials unmatch!')
+	}
+
+
+
 })
 
-router.get('/get/featured/:count',async (req,res)=>{ 
-	const count=req.params.count? req.params.count :0
-    const productFeatured=await Product.find({isFeatured:true}).limit(+count);
-	if(!productFeatured){
-		res.status(500).json({success:false})
-	}
-	res.send({featuredProducts:productFeatured})
-})
+
 
 module.exports=router;
