@@ -8,9 +8,10 @@ const mongoose=require('mongoose')
 
 router.get('/',(req,res)=>{
 	if(req.query.categories){
-		const filter=req.query.categories.split(',')
+		let filter={}
+		 filter={category:req.query.categories.split(',')}
 	}
-	const productList=Product.find({category:filter}).populate('Category')
+	const productList=Product.find({category:filter}).populate('category')
 	if(!productList){
 		res.status(500).json({success:false})
 	}
@@ -19,11 +20,11 @@ router.get('/',(req,res)=>{
 })
 
 router.get('/:id',(req,res)=>{
-    const productt=Product.findById(req.params.id).populate('Category')
+    const productt=Product.findById(req.params.id).populate('category')
 	if(!product){
 		res.status(500).json({success:false})
 	}
-	
+
 	res.send(product)
 })
 
