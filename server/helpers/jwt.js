@@ -14,8 +14,10 @@ function authJwt(){
 			`${api}/users/login`,
 			`${api}/users/register`
 		]
+		
 	})
 
 }
+
 
 module.exports=authJwt;
