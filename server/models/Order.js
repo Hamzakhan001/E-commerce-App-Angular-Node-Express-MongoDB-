@@ -37,8 +37,14 @@ const OrdersSchema=mongoose.Schema({
 		type:Date,
 		default:Date.now()
 	}
-
-
 })
 
-exports.Category=mongoose.model('Category',OrdersSchema)
+OrdersSchema.virtual('id').get(function(){
+	return this._id.toHexString();
+})
+
+OrdersSchema.set('toJSON',{
+	virtuals:true
+})
+
+exports.Order=mongoose.model('Order',OrdersSchema)
