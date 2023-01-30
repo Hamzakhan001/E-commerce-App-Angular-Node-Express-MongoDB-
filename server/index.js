@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(morgan('tiny'));
 app.use(authJwt())
 app.use(errorHandler)
+app.use('/public/uploads',express.static(__dirname+'/public/uploads'));
 const mongoose=require('mongoose')
 const cors=require('cors')
 const api=process.env.API_URL
