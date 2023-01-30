@@ -20,9 +20,9 @@ app.use(cors());
 app.options('*',cors())
 
 const productsRouter=require('./routers/products')
-const categoriesRouter=require('./routers/products')
-const usersRouter=require('./routers/products')
-const ordersRouter=require('./routers/products')
+const categoriesRouter=require('./routers/categories')
+const usersRouter=require('./routers/users')
+const ordersRouter=require('./routers/orders')
 
 
 app.use(`${api}/products`,productsRouter)
@@ -40,7 +40,7 @@ mongoose.connect(process.env.DB_CONNECTION_STRING)
 })
 
 
-app.listen('1000',()=>{
+app.listen('2000',()=>{
 	console.log('server started on port 3000')
 
 })
