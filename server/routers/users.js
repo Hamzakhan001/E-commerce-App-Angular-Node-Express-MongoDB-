@@ -24,7 +24,7 @@ router.get('/:id',(req,res)=>{
 	res.send(user)
 })
 
-router.post('/',async (req,res)=>{
+router.post('/register',async (req,res)=>{
 
 	const user=new User({
 		name:req.body.name,
@@ -43,7 +43,7 @@ router.post('/',async (req,res)=>{
 	if(!user){
 		res.status(500).send('User cannot be created!')
 	}
-	res.status(200).json(user)
+	res.status(200).json({user:user})
 	// res.status(200).json(user)
 	// product.save().then((createdProduct)=>{
 	// 	res.status(200).json(createdProduct)

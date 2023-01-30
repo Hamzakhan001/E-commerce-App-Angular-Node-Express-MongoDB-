@@ -39,6 +39,15 @@ router.post('/',async (req,res)=>{
 	const orderItemsIdResolved=await orderItemsIds;
 	console.log(orderItemsIdResolved)
 
+	const totalPrices=await  Promise.all(orderItemsIdResolved.map(async (orderItem)=>{
+		 orderItem=await OrderItem.findById(orderItem).populate('product','price')
+		const totalPrice=orderItem.product.price * orderItem.quantity;
+		return totalPrice
+	}))
+
+	console.log(totalPrices)
+	const totalPrice=totalPrices.reduce((a,b)=>a+b,0)
+
     const order=new Order({
 		orderItems:orderItemsIdResolved,
 		shippingAddress1:req.body.shippingAddress1,
@@ -56,6 +65,43 @@ router.post('/',async (req,res)=>{
 	}
 
 	res.status(200).send(order)
+})
+
+router.get('/get/totalSales',async (req,res)=>{
+	const totalSales=await Order.aggregate([
+		{$group:{_id:null,totalsales:{$sum:'$totalPrice'}}}
+	])
+	if(!totalSales){
+		res.status(400).send("The sales couldnot be genereate!")
+	}
+	res.send({totalSales:totalSales.pop().totalSales})
+})
+
+router.get('/get/count',async (req,res)=>{
+	const orderCount=await Order.countDocuments((count)=>count)
+
+	if(!orderCount){
+		res.status(500).json({success:false})
+	}
+	res.send({orderCount:orderCount})
+
+})
+
+router.get('/get/userorders/:userid',async (req,res)=>{
+
+	const userOrderList=await Order.find({user:req.params.userid}).populate({
+		path:'orderItems',populate:{
+			path:'product',populate:'category'
+		}
+	}).sort({'dateOrdered':-1})
+
+	if(!userOrderList){
+		res.status(500).json({success:false})
+
+	}
+
+	res.status(200).send(userOrderList)
+
 })
 
 router.put('/:id',async (req,res)=>{
