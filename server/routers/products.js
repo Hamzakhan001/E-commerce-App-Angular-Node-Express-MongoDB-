@@ -121,13 +121,13 @@ router.put('/:id',async (req,res)=>{
 		imagePath=singleProduct.images
 	}
 
-    const product=await Product.findByIdAndUpdate(
+    const updatedProduct=await Product.findByIdAndUpdate(
 		req.params.id,
 		{
 		name:req.body.name,
 		description:req.body.description,
 		richDescription:req.body.richDescription,
-		image:req.body.image,
+		image:imagePath,
 		branch:req.body.branch,
 		price:req.body.price,
 		category:req.body.category,
@@ -138,11 +138,11 @@ router.put('/:id',async (req,res)=>{
 		},
 		{new:true}
 		)
-	category=await category.save()
-	if(!category){
+		updatedProduct=await updatedProduct.save()
+	if(!updatedProduct){
 		return res.status(500).send("The Product cannot be found!")
 	}
-	res.status(200).send(category)
+	res.status(200).send(updatedProduct)
 })
 
 router.delete('/:id',async(req,res)=>{
