@@ -16,9 +16,7 @@ function authJwt(){
 			`${api}/users/login`,
 			`${api}/users/register`
 		]
-
 	})
-
 }
 
 async function isRevoked(req,payload,done){
